@@ -45,15 +45,17 @@ function simulation(汽轮机出口压力 = 100000 ,
   sol = solve(prob)
   
   @info "系统评价..."
-  Data = Dict("汽轮机入口压力" => sol[turbine.in.p][1],
+  Data = OrderedDict("汽轮机入口压力" => sol[turbine.in.p][1],
   "汽轮机入口温度" => sol[turbine.in.t][1],
   "汽轮机出口温度" => sol[turbine.out.t][1],
   "锅炉入口温度"=> sol[boiler.in.t][1],
   "锅炉出口压力"=> sol[boiler.out.p][1],
-  "锅炉入口压力"=> sol[boiler.in.p][1]
-  )
+  "锅炉入口压力"=> sol[boiler.in.p][1])
+  
+  #df = DataFrame(; items=collect(keys(dict_res)), value=collect(values(dict_res)))
   return Data
 end
 
+getTableData(table) = [Dict("items" => k, "value" => round(v, digits=2)) for (k, v) in table]
 
 

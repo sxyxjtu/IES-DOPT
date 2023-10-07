@@ -1,6 +1,8 @@
 using Oxygen, HTTP
 import JSON
 
+#using DataFrames
+
 include("./head.jl")
 include("./components.jl")
 include("./simulation.jl")
@@ -37,18 +39,18 @@ end
 @post "/simulation" function (req)    
   # 将HTTP请求的正文（request body）转换为 Julia 中的字典（Dict）数据结构
   paras = json(req)["inputdata"]["朗肯循环参数"]
-  println(paras)
-
   # 调用后端模型获得数据
-  Data1 = simulate!(paras)
+  table = simulate!(paras)
   # 返回数据，匹配前端request要求的格式
-  println(Data1)
-  
   return Dict(
     "code" => 200,
     "message" => "success",
-    "data" => Data1
-  )
+    "data" => Dict(
+    "table" => getTableData(table),
+      #"table" => OrderedDict(k => round(v, digits=2) for (k, v) in table),
+      #println(table)
+      "figure" => 0
+    ))
 end
 
 @get "hello" function (req)
