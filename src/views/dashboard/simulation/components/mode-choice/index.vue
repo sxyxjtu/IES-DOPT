@@ -87,11 +87,12 @@
 										</n-card>
 									</n-grid-item> -->
 
-									<n-grid-item span="0:24 640:24 1024:16">
+									<!-- <n-grid-item span="0:24 640:24 1024:16">
 										<n-card title="计算结果" :bordered="false" class="h-full rounded-8px shadow-sm">
-											<n-data-table size="small" :columns="columns" :data="tableData2" />
+											<n-data-table size="small" :columns="columns" :data="tableData" />
 										</n-card>
-									</n-grid-item>
+									</n-grid-item> -->
+
 								</n-grid>
             </n-spin>
           </n-tab-pane>
@@ -505,7 +506,7 @@ const isOptimizationOptions = ref([
 //   console.log(val)
 // })
 
-const tableColumns = ref<Array<{ title: string, key: number }>>([]);
+const tableColumns = ref<Array<{ title: string, key: string }>>([]);
 const tableData = ref<TableData[]>([]) // 表格数据
 // const figureData = ref<FigureData>({ xAxis: [], yAxis: {} }) // 图数据
 
@@ -563,7 +564,7 @@ const message = useMessage();
 // const result2 =<[]>([]) // 表格数据
 
 // 从后端获取数据
-function simulateToServer(result2) {
+function simulateToServer(){
   isCalculating.value = true;
   request.post('/simulation', {
     "inputdata": simulationParamsInput.value,
@@ -579,29 +580,32 @@ function simulateToServer(result2) {
     // window.$message.success('仿真成功');
     message.success('计算成功');
 		// console.log(response.data)
-		console.log('锅炉入口温度(K):',response.data.锅炉入口温度)
-		console.log('汽轮机入口压力(Pa):',response.data.汽轮机入口压力)
-		console.log('汽轮机入口温度(K):',response.data.汽轮机入口温度)
-		console.log('汽轮机出口温度(K):',response.data.汽轮机出口温度)
-		console.log('锅炉入口压力(Pa)：',response.data.锅炉入口压力)
-		console.log('锅炉出口压力(Pa)：',response.data.锅炉出口压力)
+		// console.log('锅炉入口温度(K):',response.data.锅炉入口温度)
+		// console.log('汽轮机入口压力(Pa):',response.data.汽轮机入口压力)
+		// console.log('汽轮机入口温度(K):',response.data.汽轮机入口温度)
+		// console.log('汽轮机出口温度(K):',response.data.汽轮机出口温度)
+		// console.log('锅炉入口压力(Pa)：',response.data.锅炉入口压力)
+		// console.log('锅炉出口压力(Pa)：',response.data.锅炉出口压力)
 
-		var result2 = [response.data.锅炉入口温度,response.data.汽轮机入口压力,response.data.汽轮机入口温度,response.data.汽轮机出口温度,response.data.锅炉入口压力,response.data.锅炉出口压力]
+		// var result2 = [response.data.锅炉入口温度,response.data.汽轮机入口压力,response.data.汽轮机入口温度,response.data.汽轮机出口温度,response.data.锅炉入口压力,response.data.锅炉出口压力]
 		// var demo =JSON.stringify(response.data)
 		// alert(demo)
 
-    // let backEndData = response.data;
-    // tableData2.value.push(backEndData);
+    let backEndData = response.data as BackEndData;
+    tableData.value.push(backEndData.table);
+		console.log(response.data)
+		console.log(backEndData.table)
 
-    // tableColumns.value = Object.keys(backEndData.table).map((key) => {
-    //   return {
-    //     title: key,
-    //     key: key,
-    //     width: 80,
-    //     resizable: true,
-    //     maxWidth: 200,
-    //   }
-    // });
+		tableColumns.value = Object.keys(backEndData.table).map((key) => {
+      return {
+        title: key,
+        key: key,
+        width: 80,
+        resizable: true,
+        maxWidth: 200,
+      }
+    });
+		console.log(tableColumns.value)
     // figureData.value = backEndData.figure;
 
     // updateFigure(dayChoiceSlider.value);
@@ -688,50 +692,50 @@ function excelExport() {
   return 0;
 };
 
-const columns = [
-  {
-    title: '参数',
-    key: 'name'
-  },
-  {
-    title: '结果',
-    key: 'result'
-  },
-];
+// const columns = [
+//   {
+//     title: '参数',
+//     key: 'name'
+//   },
+//   {
+//     title: '结果',
+//     key: 'result'
+//   },
+// ];
 
-const tableData2: TableData[] = [
-  {
-    key: 0,
-    name: '锅炉入口温度',
-    result:result[0],
-  },
-  {
-    key: 1,
-    name: '汽轮机入口温度',
-    result:result[1] ,
-  },
-  {
-    key: 2,
-    name: '汽轮机入口压力',
-		result: result[2],
-  },
-  {
-    key: 3,
-    name: '汽轮机出口温度',
-    result: result[3],
-	},
-	{
-		key: 4,
-    name: '锅炉入口压力',
-    result: result[4],
-	},
-  {
-    key: 5,
-    name: '锅炉出口压力',
-    result: result[5],
-  },
+// const tableData2: TableData[] = [
+//   {
+//     key: 0,
+//     name: '锅炉入口温度',
+//     result:result[0],
+//   },
+//   {
+//     key: 1,
+//     name: '汽轮机入口温度',
+//     result:result[1] ,
+//   },
+//   {
+//     key: 2,
+//     name: '汽轮机入口压力',
+// 		result: result[2],
+//   },
+//   {
+//     key: 3,
+//     name: '汽轮机出口温度',
+//     result: result[3],
+// 	},
+// 	{
+// 		key: 4,
+//     name: '锅炉入口压力',
+//     result: result[4],
+// 	},
+//   {
+//     key: 5,
+//     name: '锅炉出口压力',
+//     result: result[5],
+//   },
 
-];
+// ];
 
 </script>
 
