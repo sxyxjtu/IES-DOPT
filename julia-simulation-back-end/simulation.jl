@@ -56,6 +56,6 @@ function simulation(汽轮机出口压力 = 100000 ,
   return Data
 end
 
-getTableData(table) = [Dict("items" => k, "value" => round(v, digits=2)) for (k, v) in table]
+# getTableData(table) = [Dict("items" => k, "value" => round(v, digits=2)) for (k, v) in table]
 
 
