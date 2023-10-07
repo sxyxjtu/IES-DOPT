@@ -1,6 +1,6 @@
 <template>
   <dark-mode-container class="flex-center h-full" :inverted="theme.footer.inverted">
-    <span>Copyright ©2023 中石油规划总院</span>
+    <span>Copyright ©2023 Ai4Energy 设计优化小组</span>
   </dark-mode-container>
 </template>
 
