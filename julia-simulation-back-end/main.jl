@@ -46,8 +46,8 @@ end
     "code" => 200,
     "message" => "success",
     "data" => Dict(
-    "table" => getTableData(table),
-      #"table" => OrderedDict(k => round(v, digits=2) for (k, v) in table),
+    # "table" => getTableData(table),
+      "table" => OrderedDict(k => round(v, digits=2) for (k, v) in table),
       #println(table)
       "figure" => 0
     ))
