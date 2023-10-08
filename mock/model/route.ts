@@ -13,7 +13,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           requiresAuth: true,
           icon: 'icon-park-outline:analysis'
         }
-      }，
+      },
       // {
       //   name: 'dashboard_workbench',
       //   path: '/dashboard/workbench',
