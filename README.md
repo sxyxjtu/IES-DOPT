@@ -24,7 +24,7 @@ docker build -t cnpc -f .\docker\Dockerfile .
 git init
 ```
 ```
-git clone
+git clone https://github.com/ccchhhddd/IES-DOPT.git
 ```
 
 ### 前端
