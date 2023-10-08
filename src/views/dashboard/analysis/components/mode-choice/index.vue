@@ -1,5 +1,5 @@
 <template>
-  <n-divider title-placement='center'>{{ props.title + props.description }}朗肯循环仿真</n-divider>
+  <n-divider title-placement='center'>{{ props.title + props.description }}蒸汽动力循环仿真</n-divider>
 
   <!-- 第一行 模式选择与经纬度-->
   <n-grid :x-gap='16' :y-gap='16' :item-responsive='true' class='pb-15px'>
