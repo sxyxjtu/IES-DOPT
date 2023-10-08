@@ -345,9 +345,9 @@ type BackEndData = {
 // 仿真参数数据类型
 type SimulationParams = {
 	"朗肯循环参数":{
-		"汽轮机出口压力":number,
-    "水泵出口压力" :number,
-    "锅炉出口温度":number,
+		"汽轮机出口压力(pa)":number,
+    "水泵出口压力(pa)" :number,
+    "锅炉出口温度(k)":number,
 	}
 
   // "光伏参数": {
@@ -411,9 +411,9 @@ type SimulationParams = {
 
 const simulationParamsInput = ref<SimulationParams>({
 		"朗肯循环参数":{
-		"汽轮机出口压力":100000,
-    "水泵出口压力" :700000,
-    "锅炉出口温度":701,
+		"汽轮机出口压力(pa)":100000,
+    "水泵出口压力(pa)" :700000,
+    "锅炉出口温度(k)":701,
 	}
   // "光伏参数": {
   //   "装机容量（千瓦）": 5e5,
@@ -579,17 +579,6 @@ function simulateToServer(){
 
     // window.$message.success('仿真成功');
     message.success('计算成功');
-		// console.log(response.data)
-		// console.log('锅炉入口温度(K):',response.data.锅炉入口温度)
-		// console.log('汽轮机入口压力(Pa):',response.data.汽轮机入口压力)
-		// console.log('汽轮机入口温度(K):',response.data.汽轮机入口温度)
-		// console.log('汽轮机出口温度(K):',response.data.汽轮机出口温度)
-		// console.log('锅炉入口压力(Pa)：',response.data.锅炉入口压力)
-		// console.log('锅炉出口压力(Pa)：',response.data.锅炉出口压力)
-
-		// var result2 = [response.data.锅炉入口温度,response.data.汽轮机入口压力,response.data.汽轮机入口温度,response.data.汽轮机出口温度,response.data.锅炉入口压力,response.data.锅炉出口压力]
-		// var demo =JSON.stringify(response.data)
-		// alert(demo)
 
     let backEndData = response.data as BackEndData;
     tableData.value.push(backEndData.table);
