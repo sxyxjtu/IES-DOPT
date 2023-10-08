@@ -16,6 +16,17 @@ docker build -t cnpc -f .\docker\Dockerfile .
 
 ## 使用说明
 
+### 先将项目克隆到本地
+首先创建一个空的文件夹用于存放项目
+在创建的文件夹中 右键选择Git Bash Here
+输入
+```
+git init
+```
+```
+git clone
+```
+
 ### 前端
 
 前端需要下载node.js使用 npm 库安装相关库以及运行相关代码
