@@ -26,6 +26,8 @@ git init
 ```
 git clone https://github.com/ccchhhddd/IES-DOPT.git
 ```
+如果克隆过程存在问题参考这篇文章进行解决
+https://blog.csdn.net/m0_63230155/article/details/132070860
 
 ### 前端
 
