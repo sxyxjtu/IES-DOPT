@@ -1,8 +1,8 @@
 
            
-simulate!(paras) = simulation(paras["汽轮机出口压力"], 
-                              paras["水泵出口压力"], 
-                              paras["锅炉出口温度"])
+simulate!(paras) = simulation(paras["汽轮机出口压力(pa)"], 
+                              paras["水泵出口压力(pa)"], 
+                              paras["锅炉出口温度(k)"])
 
 
 
@@ -45,12 +45,12 @@ function simulation(汽轮机出口压力 = 100000 ,
   sol = solve(prob)
   
   @info "系统评价..."
-  Data = OrderedDict("汽轮机入口压力" => sol[turbine.in.p][1],
-  "汽轮机入口温度" => sol[turbine.in.t][1],
-  "汽轮机出口温度" => sol[turbine.out.t][1],
-  "锅炉入口温度"=> sol[boiler.in.t][1],
-  "锅炉出口压力"=> sol[boiler.out.p][1],
-  "锅炉入口压力"=> sol[boiler.in.p][1])
+  Data = OrderedDict("汽轮机入口压力(pa)" => sol[turbine.in.p][1],
+  "汽轮机入口温度(k)" => sol[turbine.in.t][1],
+  "汽轮机出口温度(k)" => sol[turbine.out.t][1],
+  "锅炉入口温度(k)"=> sol[boiler.in.t][1],
+  "锅炉出口压力(pa)"=> sol[boiler.out.p][1],
+  "锅炉入口压力(pa)"=> sol[boiler.in.p][1])
   
   #df = DataFrame(; items=collect(keys(dict_res)), value=collect(values(dict_res)))
   return Data
