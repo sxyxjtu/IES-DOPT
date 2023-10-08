@@ -5,25 +5,15 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
     component: 'basic',
     children: [
 			{
-        name: 'dashboard_simulation',
-        path: '/dashboard/simulation',
-        component: 'self',
-        meta: {
-          title: '朗肯循环仿真',
-          requiresAuth: true,
-          icon: 'icon-park-outline:analysis'
-        }
-      },
-      {
         name: 'dashboard_analysis',
         path: '/dashboard/analysis',
         component: 'self',
         meta: {
-          title: '风光制氢',
+          title: '蒸汽动力循环仿真',
           requiresAuth: true,
           icon: 'icon-park-outline:analysis'
         }
-      },
+      }，
       // {
       //   name: 'dashboard_workbench',
       //   path: '/dashboard/workbench',
