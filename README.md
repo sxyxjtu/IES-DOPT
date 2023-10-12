@@ -49,4 +49,4 @@ npm run dev ——————运行程序
 直接运行main.jl文件即可 文件路径：  /julia-simulation-back-end/main.jl
 ```
 
-初次进行仿真运算时间会略长，请耐心等待
+初次进行仿真运算时间会略长，请耐心等待。
