@@ -36,11 +36,13 @@ function CorsMiddleware(handler)
   end
 end
 
-@post "/simulation" function (req)    
+@post "/simulation" function (req)   
   # 将HTTP请求的正文（request body）转换为 Julia 中的字典（Dict）数据结构
-  paras = json(req)["inputdata"]["朗肯循环参数"]
+  paras = json(req)
   # 调用后端模型获得数据
-  table = simulate!(paras)
+  #table = simulate!(paras["inputdata"], Val(paras["mode"]))
+  println(paras)
+  figure,table = simulate!(paras["inputdata"],Val(paras["mode"]))
   # 返回数据，匹配前端request要求的格式
   return Dict(
     "code" => 200,
@@ -49,7 +51,9 @@ end
     # "table" => getTableData(table),
       "table" => OrderedDict(k => round(v, digits=2) for (k, v) in table),
       #println(table)
-      "figure" => 0
+      "figure" => Dict(
+      "xAxis" => collect(1:8760),
+      "yAxis" => figure)
     ))
 end
 
