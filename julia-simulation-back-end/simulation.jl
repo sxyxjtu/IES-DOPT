@@ -1,4 +1,5 @@
-         
+using Plots   
+include("function.jl")     
 #朗肯循环
 simulate!(paras,::Val{1}) = rankine(paras["朗肯循环参数"]["冷凝器冷却压力(pa)"], 
                               paras["朗肯循环参数"]["水泵供给压力(pa)"], 
@@ -47,7 +48,7 @@ function reheat_rankine(冷凝器冷却压力,
     # 求解
     prob = ODAEProblem(sys, [0], (0, 0.0))
     sol = solve(prob)
-    @info "成功"
+    
     #println(sol)
     table = OrderedDict("汽轮机一级入口压力(pa)" => sol[turbine.in.p][1],
     "汽轮机一级入口温度(k)" => sol[turbine.in.t][1],
@@ -57,29 +58,40 @@ function reheat_rankine(冷凝器冷却压力,
     "锅炉出口压力(pa)"=> sol[boiler.out.p][1],
     "锅炉入口压力(pa)"=> sol[boiler.in.p][1])
 
-#plot_sys = [pump, boiler, turbine, reboiler, returbine, condenser];
-# propx = :s
-# propy = :T
+    plot_sys = [pump, boiler, turbine, reboiler, returbine, condenser];
+    propx = :s
+    propy = :t
+    
+    ss = [sol[getproperty(i.out, propx)][1] for i in plot_sys]
+    tt = [sol[getproperty(i.out, propy)][1] for i in plot_sys]
 
-# ss = [sol[getproperty(i.out, propx)][1] for i in plot_sys]
-# tt = [sol[getproperty(i.out, propy)][1] for i in plot_sys]
+    xAxis = collect(range(ss[1], ss[2], 15))
+    yAxis = CoolProp.PropsSI.("T", "P", sol[pump.out.p], "S", collect(range(ss[1], ss[2], 15)), "Water")
+    
+    append!(xAxis, collect(range(ss[2], ss[3], 15)))
+    append!(yAxis,collect(range(tt[2], tt[3], 15)))
+    
+    append!(xAxis,collect(range(ss[3], ss[4], 15)))
+    append!(yAxis,CoolProp.PropsSI.("T", "P", sol[reboiler.out.p], "S", collect(range(ss[3], ss[4], 15)), "Water"))
+    
+    append!(xAxis,collect(range(ss[4], ss[5], 15)))
+    append!(yAxis,collect(range(tt[4], tt[5], 15)))
 
-# using Plots
-# res = collect(range(ss[1], ss[2], 100))
-# plot(res, CoolProp.PropsSI.("T", "P", 6.69E6, "S", res, "Water"), label="Boiler", xlim=(0, 10000), ylabel="T", xlabel="S")
-# plot!(collect(range(ss[2], ss[3], 100)), collect(range(tt[2], tt[3], 100)), label="Turbine")
-# res = collect(range(ss[3], ss[4], 100))
-# plot!(res, CoolProp.PropsSI.("T", "P", 0.782e6, "S", res, "Water"), label="reBoiler")
-# plot!(collect(range(ss[4], ss[5], 100)), collect(range(tt[4], tt[5], 100)), label="reTurbine")
-# plot!(collect(range(ss[5], ss[6], 100)), collect(range(tt[5], tt[6], 100)), label="Condenser")
-# plot!(collect(range(ss[6], ss[1], 100)), collect(range(tt[6], tt[1], 100)), label="Pump")
-
-    figure = 0
+    append!(xAxis,collect(range(ss[5], ss[6], 15)))
+    append!(yAxis,collect(range(tt[5], tt[6], 15)))
+    
+    append!(xAxis,collect(range(ss[6], ss[1], 15)))
+    append!(yAxis,collect(range(tt[6], tt[1], 15)))
+    # println(xAxis)
+    # println(yAxis)
+    figure = transposeMatrix(xAxis, yAxis)
+    #在本地绘图
+    plot_local(figure)
     return figure,table
 end
 
 @info "开始建模..."
-function rankine(汽轮机出口压力 = 100000 ,
+function rankine(汽轮机出口压力 = 150000 ,
   水泵出口压力 = 700000,
   锅炉出口温度 = 700)
     @info "创建组件..."
@@ -121,7 +133,30 @@ function rankine(汽轮机出口压力 = 100000 ,
   "锅炉入口温度(k)"=> sol[boiler.in.t][1],
   "锅炉出口压力(pa)"=> sol[boiler.out.p][1],
   "锅炉入口压力(pa)"=> sol[boiler.in.p][1])
-  figure = 0
+  
+  plot_sys = [pump, boiler, turbine, condenser];
+  propx = :s
+  propy = :t
+  
+  ss = [sol[getproperty(i.out, propx)][1] for i in plot_sys]
+  tt = [sol[getproperty(i.out, propy)][1] for i in plot_sys]
+
+  xAxis = collect(range(ss[1], ss[2], 15))
+  yAxis = CoolProp.PropsSI.("T", "P", sol[pump.out.p], "S", collect(range(ss[1], ss[2], 15)), "Water")
+  
+  append!(xAxis,collect(range(ss[2], ss[3], 15)))
+  append!(yAxis,collect(range(tt[2], tt[3], 15)))
+  
+  append!(xAxis,collect(range(ss[3], ss[4], 15)))
+  append!(yAxis,CoolProp.PropsSI.("T", "P", sol[turbine.out.p], "S", collect(range(ss[3], ss[4], 15)), "Water"))
+  
+  append!(xAxis,collect(range(ss[4], ss[1], 15)))
+  append!(yAxis,collect(range(tt[4], tt[1], 15)))
+  
+  figure = transposeMatrix(xAxis, yAxis)
+  #在本地绘图
+  plot_local(figure)
+  
   return figure,table
 end
 
