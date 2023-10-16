@@ -1,5 +1,5 @@
 <template>
-  <n-divider title-placement="center">{{ props.title + props.description }}蒸汽动力循环仿真</n-divider>
+  <n-divider title-placement="center">{{ props.title + props.description }}热力循环仿真</n-divider>
 
   <!-- 第一行 模式选择与经纬度-->
   <n-grid :x-gap="16" :y-gap="16" :item-responsive="true" class="pb-15px">
@@ -48,9 +48,9 @@
         <n-space v-if='modeChoosed == 2' justify='center'>
           <n-image src="../系统图/再热循环.png" alt="mode-choice" width="600" />
         </n-space>
-        <!-- <n-space v-if='modeChoosed == 3' justify='center'>
-          <n-image src="/离网制氢模式.png" alt="mode-choice" width="600" />
-        </n-space> -->
+        <n-space v-if='modeChoosed == 3' justify='center'>
+          <n-image src="../系统图/制冷循环.png" alt="mode-choice" width="600" />
+        </n-space>
       </n-card>
     </n-grid-item>
     <!-- 参数输入 -->
@@ -62,15 +62,15 @@
               <template #description>正在计算中，请稍等...</template>
               <n-collapse :accordion="true">
                 <n-collapse-item v-for="(val, key, ind) in simulationParamsInput" :title='key' :name='ind'
-                  :disabled='((modeChoosed == 1) && (ind == 1))||((modeChoosed == 2) && (ind == 0))'>
+                  :disabled='((modeChoosed == 1) && (ind != 0))||((modeChoosed == 2) && (ind != 1))||((modeChoosed == 3) && (ind !=2))'>
                   <!-- ind代表第几个不显示，用于在模式切换时进行选择 -->
                   <n-space vertical justify='space-between' size='large' style='margin-bottom: 10px;'>
-                    <n-input-number v-for="(val_input, key_input, _) in (val as { [key: string]: number; })"
+                    <n-input v-for="(val_input, key_input, _) in (val as { [key: string]: number|string })"
                       v-model:value='val[key_input as keyof typeof val]'
-                      :disabled="(modeChoosed >2)"
+                      :disabled="(modeChoosed >3)"
                       :placeholder='val_input.toString()' :parse="parse" :format="format">
                       <template #prefix>{{ key_input }}： </template>
-                    </n-input-number>
+                    </n-input>
                   </n-space>
                 </n-collapse-item>
                 <n-divider></n-divider>
@@ -169,7 +169,7 @@ const props = defineProps({
   }
 });
 
-const modeChoosed = ref<number>(1); //  1: 风光制氢余电上网 2: 风光制氢余电不上网 3: 离网制氢模式
+const modeChoosed = ref<number>(1); //
 // 经纬度数据
 const longitude = ref<number>(0.0);
 const latitude = ref<number>(0.0);
@@ -191,11 +191,23 @@ const modeOptions = [
     label: '再热循环仿真',
     value: 2
   },
-  // {
-  //   label: '离网制氢模式',
-  //   value: 3
-  // }
+  {
+    label: '制冷循环仿真',
+    value: 3
+  }
 ];
+
+// 工质选择
+// const wfOptions=[
+// {
+// 	label:'Water',
+// 	value:1,
+// },
+// {
+// 	label:'R134a',
+// 	value:2,
+// },
+// ]
 
  //检测到模式选择变化时，打印出来
 //  watch(simulateOrOptimizeSwitch, (newValue, oldValue) => {
@@ -250,7 +262,7 @@ const lineOptions = ref<ECOption>({
     }
   },
   legend: {
-    data: ['朗肯循环','再热循环']
+    data: []
   },
   grid: {
     left: '3%',
@@ -261,7 +273,7 @@ const lineOptions = ref<ECOption>({
   },
   xAxis: {
     type: 'value',
-    name: '熵',
+    name: '熵(S)',
     axisLabel: {
       formatter: '{value} J/(mol*k)'
     }
@@ -288,6 +300,7 @@ const lineOptions = ref<ECOption>({
       emphasis: {
         focus: 'series'
       },
+
     //   data: [
     //     // 维度X   维度Y   其他维度 ...
     //     [  5.4,    4.5  ],
@@ -302,6 +315,28 @@ const lineOptions = ref<ECOption>({
     },
     {
       name: '再热循环',
+      type: 'line',
+      smooth: true,
+      // stack: 'Total',
+      // areaStyle: {},
+      emphasis: {
+        focus: 'series'
+      },
+
+    //     data: [
+    //     // 维度X   维度Y   其他维度 ...
+    //     [  3.4,    4.5  ],
+		// 		[  3.4,    4.5, ],
+    //     [  4.2,    2.3, ],
+    //     [  10.8,   4,   ],
+		// 		[  9.8,   9.5,  ],
+		// 		[  8.8,   9.5,  ],
+		// 		[  8.8,   7.5,  ],
+		// 		[  3.4,    4.5  ]
+    //  ]
+    },
+		{
+		name: '制冷循环',
       type: 'line',
       smooth: true,
       // stack: 'Total',
@@ -347,71 +382,23 @@ type SimulationParams = {
     '冷凝器冷却压力(pa)': number;
     '水泵供给压力(pa)': number;
     '锅炉出口温度(k)': number;
-  };
+		'工质':string;
+  },
 	再热循环参数:{
 		'冷凝器冷却压力(pa)': number;
     '水泵供给压力(pa)': number;
     '锅炉出口温度(k)': number;
 		'再热器出口温度(k)': number;
 		'汽轮机一级出口压力(pa)':number;
-	}
-  // "光伏参数": {
-  //   "装机容量（千瓦）": number,
-  //   "综合效率": number,
-  //   "产品寿命（年）": number,
-  //   "投资成本（￥/kW）": number,
-  //   "运维成本（￥/kW）": number,
-  //   "替换成本（￥/kW）": number,
-  //   "单位设备容量（kW）": number
-  // },
-  // "风电参数": {
-  //   "装机容量（千瓦）": number,
-  //   "综合效率": number,
-  //   "产品寿命（年）": number,
-  //   "投资成本（￥/kW）": number,
-  //   "运维成本（￥/kW）": number,
-  //   "替换成本（￥/kW）": number,
-  //   "单位设备容量（kW）": number
-  // }
-  // "电解槽参数": {
-  //   "装机容量（千瓦）": number,
-  //   "综合效率": number,
-  //   "产品寿命（年）": number,
-  //   "投资成本（￥/kW）": number,
-  //   "运维成本（￥/kW）": number,
-  //   "替换成本（￥/kW）": number,
-  //   "单位设备容量（kW）": number
-  // }
-  // "储氢参数": {
-  //   "装机容量（吨）": number,
-  //   "充能阈值": number,
-  //   "产品寿命（年）": number,
-  //   "投资成本（￥/吨）": number,
-  //   "运维成本（￥/吨）": number,
-  //   "替换成本（￥/吨）": number,
-  //   "单位设备容量（吨）": number
-  // },
-  // "储能参数": {
-  //   "装机容量（千瓦时）": number,
-  //   "充能阈值": number,
-  //   "产品寿命（年）": number,
-  //   "投资成本（￥/kW）": number,
-  //   "运维成本（￥/kW）": number,
-  //   "替换成本（￥/kW）": number,
-  //   "单位设备容量（kW）": number
-  // },
-  // "经济性参数": {
-  //   "系统运营年限（年）": number,
-  //   "电解水成本（￥/kg）": number,
-  //   "买电电价（￥/kwh）": number,
-  //   "卖电电价（￥/kwh）": number,
-  //   "氢气售卖价格（￥/kg）": number,
-  //   "目标收益率": number,
-  //   "综合税率": number,
-  //   "折旧率": number,
-  //   "煤电碳排放因子（kg/kWh）": number,
-  //   "气电碳排放因子（kg/kWh）": number,
-  // }
+		'工质':string;
+	},
+  制冷循环参数:{
+    '压缩机出口压力(pa)':number;
+    '节气门出口压力(pa)':number;
+		'冷凝器出口R134a状态':string;
+		'蒸发器出口R134a状态':string;
+		'工质':string;
+  }
 };
 
 const simulationParamsInput = ref<SimulationParams>({
@@ -419,6 +406,7 @@ const simulationParamsInput = ref<SimulationParams>({
     '冷凝器冷却压力(pa)': 4000,
     '水泵供给压力(pa)': 3000000,
     '锅炉出口温度(k)': 823,
+		'工质':'Water',
   },
 	再热循环参数:{
 		'冷凝器冷却压力(pa)': 4000,
@@ -426,64 +414,15 @@ const simulationParamsInput = ref<SimulationParams>({
     '锅炉出口温度(k)': 823,
 		'再热器出口温度(k)': 720,
 		'汽轮机一级出口压力(pa)':3000000,
-	}
-  // "光伏参数": {
-  //   "装机容量（千瓦）": 5e5,
-  //   "综合效率": 1.0,
-  //   "产品寿命（年）": 20,
-  //   "投资成本（￥/kW）": 3800,
-  //   "运维成本（￥/kW）": 190,
-  //   "替换成本（￥/kW）": 3800,
-  //   "单位设备容量（kW）": 650
-  // },
-  // "风电参数": {
-  //   "装机容量（千瓦）": 5e5,
-  //   "综合效率": 1.0,
-  //   "产品寿命（年）": 20,
-  //   "投资成本（￥/kW）": 3800,
-  //   "运维成本（￥/kW）": 190,
-  //   "替换成本（￥/kW）": 3800,
-  //   "单位设备容量（kW）": 650
-  // },
-  // "电解槽参数": {
-  //   "装机容量（千瓦）": 5e5,
-  //   "综合效率": 1.0,
-  //   "产品寿命（年）": 20,
-  //   "投资成本（￥/kW）": 3800,
-  //   "运维成本（￥/kW）": 190,
-  //   "替换成本（￥/kW）": 3800,
-  //   "单位设备容量（kW）": 650
-  // },
-  // "储氢参数": {
-  //   "装机容量（吨）": 15000,
-  //   "充能阈值": 0.9,
-  //   "产品寿命（年）": 20,
-  //   "投资成本（￥/吨）": 3800,
-  //   "运维成本（￥/吨）": 190,
-  //   "替换成本（￥/吨）": 3800,
-  //   "单位设备容量（吨）": 650
-  // },
-  // "储能参数": {
-  //   "装机容量（千瓦时）": 15000,
-  //   "充能阈值": 0.9,
-  //   "产品寿命（年）": 20,
-  //   "投资成本（￥/kW）": 1500,
-  //   "运维成本（￥/kW）": 190,
-  //   "替换成本（￥/kW）": 1500,
-  //   "单位设备容量（kW）": 650
-  // },
-  // "经济性参数": {
-  //   "系统运营年限（年）": 20,
-  //   "电解水成本（￥/kg）": 0.021,
-  //   "买电电价（￥/kwh）": 0.355,
-  //   "卖电电价（￥/kwh）": 0.228,
-  //   "氢气售卖价格（￥/kg）": 25.58,
-  //   "目标收益率": 0.05,
-  //   "综合税率": 0.0,
-  //   "折旧率": 0.05,
-  //   "煤电碳排放因子（kg/kWh）": 1.0,
-  //   "气电碳排放因子（kg/kWh）": 0.5,
-  // }
+		'工质':'Water',
+	},
+  制冷循环参数:{
+    '压缩机出口压力(pa)':1020000,
+    '节气门出口压力(pa)':84000,
+		'冷凝器出口R134a状态':"饱和液体",
+		'蒸发器出口R134a状态':"饱和蒸气",
+		'工质':'Water',
+  }
 });
 
 // const isOptimizationGroup = ref<Array<number>>([2])
@@ -531,6 +470,17 @@ function updateModeSelectData(value: number, options: SelectOption) {
   }
   tableData.value = [];
 }
+// 工质选择数据更新
+// function updatewfSelectData(value: number, options: SelectOption) {
+//   if (value == 1) {
+
+//   }
+// 	else if(value == 2){
+
+// 	}
+//   tableData.value = [];
+// }
+
 
 // 更新表格数据
 const updateFigure = () => {
@@ -548,7 +498,7 @@ const updateFigure = () => {
     };
 	lineOptions.value.xAxis = {
     type: 'value',
-    name: '熵',
+    name: '熵(S)',
     axisLabel: {
       formatter: '{value} J/(mol*k)'
     }
@@ -568,8 +518,9 @@ const updateFigure = () => {
 		}
     })
 	lineOptions.value.legend = {
-		data:['再热循环']
-	}
+    	data: []
+  }
+
 }
 console.log(figureData.value.xyAxis)
 
@@ -584,8 +535,7 @@ const message = useMessage();
 // 从后端获取数据
 function simulateToServer() {
   isCalculating.value = true;
-  request
-    .post('/simulation', {
+  request.post('/simulation', {
       inputdata: simulationParamsInput.value,
       mode: modeChoosed.value
     })
@@ -597,7 +547,6 @@ function simulateToServer() {
           message.error('计算失败');
           return;
         }
-
         // window.$message.success('仿真成功');
         message.success('计算成功');
 
@@ -618,8 +567,7 @@ function simulateToServer() {
         });
         // console.log(tableColumns.value);
         figureData.value = backEndData.figure;
-				// console.log(figureData.value.xyAxis)
-				console.log(figureData)
+				// console.log(figureData)
         updateFigure();
       },
       error => {
@@ -670,7 +618,7 @@ const format = (value: number | null) => {
 const parse = (input: string) => {
   const nums = input.replace(/,/g, '').trim();
   if (/^\d+(\.(\d+)?)?$/.test(nums)) return Number(nums);
-  return nums === '' ? null : Number.NaN;
+  return nums === '' ? null : Number.NaN
 };
 
 // 导出excel
