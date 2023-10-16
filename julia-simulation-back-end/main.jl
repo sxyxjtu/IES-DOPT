@@ -25,7 +25,7 @@ const CORS_HEADERS = [
   "Access-Control-Allow-Methods" => "POST, GET, OPTIONS"
 ]
 function CorsMiddleware(handler)
-  return function (req::HTTP.Request)                         
+  return function (req::HTTP.Request)
     # println("CORS middleware")
     # determine if this is a pre-flight request from the browser
     if HTTP.method(req) ∈ ["POST", "GET", "OPTIONS"]
@@ -36,7 +36,7 @@ function CorsMiddleware(handler)
   end
 end
 
-@post "/simulation" function (req)   
+@post "/simulation" function (req)
   # 将HTTP请求的正文（request body）转换为 Julia 中的字典（Dict）数据结构
   paras = json(req)
   # 调用后端模型获得数据
@@ -52,7 +52,7 @@ end
     # "table" => getTableData(table),
       "table" => OrderedDict(k => round(v, digits=2) for (k, v) in table),
       "figure" => Dict(
-      "xyAxis" => figure
+      "xyAxis" => figure,
       )
     ))
 end
@@ -67,5 +67,5 @@ end
   # 本地测试 async=true，服务器上 async=false。同步测试便于调试
   serve(host="0.0.0.0", port=8080, async=true)
   # serve(port=8080, async=true)
-  
- 
+
+

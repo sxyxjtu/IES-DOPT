@@ -9,8 +9,8 @@ function plot_local(data)
      xa = [point[1] for point in data]
      ya = [point[2] for point in data]
      # 创建散点图
-     fig = plot(xa, ya, label="数据点", legend=true, markersize=6)
-     display(fig)
+    fig = plot(xa, ya, label="数据点", legend=true, markersize=6)
+    display(fig)
 end
 
 
