@@ -67,10 +67,10 @@ function refrigeration(压缩机出口压力,节气门出口压力,工质)
 	yAxis = collect(range(tt[1], tt[2], 15))
 
 	append!(xAxis, collect(range(ss[2], ss[3], 15)))
-	append!(yAxis,CoolProp.PropsSI.("T", "P", sol[condenser.out.p], "S", collect(range(ss[2], ss[3], 15)), fluid))
+	append!(yAxis,CoolProp.PropsSI.("T", "P", sol[condenser.out.p], "S", collect(range(ss[2], ss[3], 15)), 工质))
 
 	append!(xAxis,collect(range(ss[3], ss[4], 15)))
-	append!(yAxis,CoolProp.PropsSI.("T", "H", sol[throttle.out.h], "S", collect(range(ss[3], ss[4], 15)), fluid))
+	append!(yAxis,CoolProp.PropsSI.("T", "H", sol[throttle.out.h], "S", collect(range(ss[3], ss[4], 15)), 工质))
 
 	append!(xAxis,collect(range(ss[4], ss[1], 15)))
 	append!(yAxis,collect(range(tt[4], tt[1], 15)))
@@ -148,13 +148,13 @@ function reheat_rankine(冷凝器冷却压力,
     tt = [sol[getproperty(i.out, propy)][1] for i in plot_sys]
 
     xAxis = collect(range(ss[1], ss[2], 15))
-    yAxis = CoolProp.PropsSI.("T", "P", sol[pump.out.p], "S", collect(range(ss[1], ss[2], 15)), fluid)
+    yAxis = CoolProp.PropsSI.("T", "P", sol[pump.out.p], "S", collect(range(ss[1], ss[2], 15)), 工质)
 
     append!(xAxis, collect(range(ss[2], ss[3], 15)))
     append!(yAxis,collect(range(tt[2], tt[3], 15)))
 
     append!(xAxis,collect(range(ss[3], ss[4], 15)))
-    append!(yAxis,CoolProp.PropsSI.("T", "P", sol[reboiler.out.p], "S", collect(range(ss[3], ss[4], 15)), fluid))
+    append!(yAxis,CoolProp.PropsSI.("T", "P", sol[reboiler.out.p], "S", collect(range(ss[3], ss[4], 15)), 工质))
 
     append!(xAxis,collect(range(ss[4], ss[5], 15)))
     append!(yAxis,collect(range(tt[4], tt[5], 15)))
@@ -234,13 +234,13 @@ function rankine(汽轮机出口压力 = 150000,
   tt = [sol[getproperty(i.out, propy)][1] for i in plot_sys]
 
   xAxis = collect(range(ss[1], ss[2], 15))
-  yAxis = CoolProp.PropsSI.("T", "P", sol[pump.out.p], "S", collect(range(ss[1], ss[2], 15)), fluid)
+  yAxis = CoolProp.PropsSI.("T", "P", sol[pump.out.p], "S", collect(range(ss[1], ss[2], 15)), 工质)
 
   append!(xAxis,collect(range(ss[2], ss[3], 15)))
   append!(yAxis,collect(range(tt[2], tt[3], 15)))
 
   append!(xAxis,collect(range(ss[3], ss[4], 15)))
-  append!(yAxis,CoolProp.PropsSI.("T", "P", sol[turbine.out.p], "S", collect(range(ss[3], ss[4], 15)), fluid))
+  append!(yAxis,CoolProp.PropsSI.("T", "P", sol[turbine.out.p], "S", collect(range(ss[3], ss[4], 15)), 工质))
 
   append!(xAxis,collect(range(ss[4], ss[1], 15)))
   append!(yAxis,collect(range(tt[4], tt[1], 15)))
