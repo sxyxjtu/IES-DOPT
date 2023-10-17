@@ -2,7 +2,7 @@
 
 ## 本项目所使用使用前端框架
 
-[![license](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE) 
+[![license](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
 
 * [Soybean Admin](https://github.com/honghuangdc/soybean-admin) 是一个基于 Vue3、Vite3、TypeScript、NaiveUI、Pinia 和 UnoCSS 的清新优雅的中后台模版，它使用了最新流行的前端技术栈，内置丰富的主题配置，有着极高的代码规范，基于文件的路由系统以及基于 Mock 的动态权限路由，开箱即用的中后台前端解决方案，也可用于学习参考。
 
@@ -49,4 +49,4 @@ npm run dev ——————运行程序
 直接运行main.jl文件即可 文件路径：  /julia-simulation-back-end/main.jl
 ```
 
-初次进行仿真运算时间会略长，请耐心等待。
+初次进行仿真运算时间会略长，请耐心等待
