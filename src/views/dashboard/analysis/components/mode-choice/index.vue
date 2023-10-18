@@ -71,6 +71,7 @@
                       :placeholder='val_input.toString()' :parse="parse" :format="format">
                       <template #prefix>{{ key_input }}： </template>
                     </n-input>
+
                   </n-space>
                 </n-collapse-item>
                 <n-divider></n-divider>

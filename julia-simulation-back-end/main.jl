@@ -42,6 +42,7 @@ end
   # 调用后端模型获得数据
   #table = simulate!(paras["inputdata"], Val(paras["mode"]))
   #println(paras)
+	println(paras)
   figure,table = simulate!(paras["inputdata"],Val(paras["mode"]))
   #println(figure)
   # 返回数据，匹配前端request要求的格式

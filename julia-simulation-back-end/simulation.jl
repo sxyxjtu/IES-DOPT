@@ -23,6 +23,8 @@ simulate!(paras,::Val{3}) = refrigeration(paras["制冷循环参数"]["压缩机
 																					)
 
 function refrigeration(压缩机出口压力,节气门出口压力,工质)
+  压缩机出口压力 = 压缩机出口压力 isa Number ? 压缩机出口压力 : parse(Float64,压缩机出口压力)
+  节气门出口压力 = 节气门出口压力 isa Number ? 节气门出口压力 : parse(Float64,节气门出口压力)
 
 	#创建组件...
 	@named compressor = Compressor(P = 压缩机出口压力,fluid = 工质)
@@ -94,13 +96,13 @@ function reheat_rankine(冷凝器冷却压力,
                         再热器出口温度,
                         汽轮机一级出口压力,
 												工质)
-		# 选择工质
-		if(工质==1)
-			工质 = "Water"
-		end
-		if(工质==2)
-			工质 = "R134a"
-		end
+
+                        冷凝器冷却压力 = 冷凝器冷却压力 isa Number ? 冷凝器冷却压力 : parse(Float64,冷凝器冷却压力)
+                        水泵供给压力 = 水泵供给压力 isa Number ? 水泵供给压力 : parse(Float64,水泵供给压力)
+                        锅炉出口温度 = 锅炉出口温度 isa Number ? 锅炉出口温度 : parse(Float64,锅炉出口温度)
+                        再热器出口温度 = 再热器出口温度 isa Number ? 再热器出口温度 : parse(Float64,再热器出口温度)
+                        汽轮机一级出口压力 = 汽轮机一级出口压力 isa Number ? 汽轮机一级出口压力 : parse(Float64,汽轮机一级出口压力)
+
     #创建组件...
     @named pump = Pump(P = 水泵供给压力,fluid = 工质)
     @named boiler = Boiler(T = 锅炉出口温度,fluid = 工质)
@@ -173,18 +175,12 @@ function reheat_rankine(冷凝器冷却压力,
 end
 
 @info "开始建模..."
-function rankine(汽轮机出口压力 = 150000,
-  水泵出口压力 = 700000,
-  锅炉出口温度 = 700,
-	工质=1)
+function rankine(汽轮机出口压力,水泵出口压力,锅炉出口温度,工质)
 
-		# 选择工质
-		if(工质==1)
-			工质 = "Water"
-		end
-		if(工质==2)
-			工质 = "R134a"
-		end
+	汽轮机出口压力 = 汽轮机出口压力 isa Number ? 汽轮机出口压力 : parse(Float64,汽轮机出口压力)
+  水泵出口压力 = 水泵出口压力 isa Number ? 水泵出口压力 : parse(Float64,水泵出口压力)
+	锅炉出口温度 = 锅炉出口温度 isa Number ? 锅炉出口温度 : parse(Float64,锅炉出口温度)
+
 
     @info "创建组件..."
       @named turbine = Turbine(P = 汽轮机出口压力,fluid = 工质)
