@@ -19,6 +19,7 @@ docker build -t cnpc -f .\docker\Dockerfile .
 ### 先将项目克隆到本地
 #### 方法一：使用GitKraken进行项目克隆及项目相关操作（推荐）
 GitKraken使用详情请见 https://ai4energy.github.io/Ai4EDocs/dev/WorkFlow/gitworkflow/
+
 如果你是学生可以使用学校的邮箱注册，学生包有gitkraken的会员 https://education.github.com/pack
 
 #### 方法二：git命令行手动操作
