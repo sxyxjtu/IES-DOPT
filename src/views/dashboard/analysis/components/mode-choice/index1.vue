@@ -8,8 +8,13 @@
         <p class="text-16px font-bold inline-block">模式选择</p>
         <p class="text-16px text-red inline-block">*</p>
         <!-- 在文字后面显示下拉框 -->
-        <n-select v-model:value="modeChoosed" :options="modeOptions" style="" class="py-5px"
-          @update:value="updateModeSelectData" />
+        <n-select
+          v-model:value="modeChoosed"
+          :options="modeOptions"
+          style=""
+          class="py-5px"
+          @update:value="updateModeSelectData"
+        />
       </n-card>
     </n-grid-item>
 
@@ -57,16 +62,16 @@
               <template #description>正在计算中，请稍等...</template>
               <n-collapse :accordion="true">
                 <n-collapse-item v-for="(val, key, ind) in simulationParamsInput" :title='key' :name='ind'
-                  :disabled='((modeChoosed == 1) && (ind != 0)) || ((modeChoosed == 2) && (ind != 1)) || ((modeChoosed == 3) && (ind != 2))'>
+                  :disabled='((modeChoosed == 1) && (ind != 0))||((modeChoosed == 2) && (ind != 1))||((modeChoosed == 3) && (ind !=2))'>
                   <!-- ind代表第几个不显示，用于在模式切换时进行选择 -->
                   <n-space vertical justify='space-between' size='large' style='margin-bottom: 10px;'>
-                    <n-input v-for="(val_input, key_input, _) in (Object.fromEntries(Object.entries(val).filter(([key,_])=>key!=='工质')) as { [key: string]: number | string })"
-                      v-model:value='val[key_input as keyof typeof val]' :disabled="(modeChoosed > 3)||(modeChoosed!==ind+1)"
+                    <n-input v-for="(val_input, key_input, _) in (val as { [key: string]: number|string })"
+                      v-model:value='val[key_input as keyof typeof val]'
+                      :disabled="(modeChoosed >3)"
                       :placeholder='val_input.toString()' :parse="parse" :format="format">
                       <template #prefix>{{ key_input }}： </template>
                     </n-input>
-                    <p>工质：</p>
-                    <n-select v-model:value="val['工质']" :options="wfOptions" @update:value="(value: String, options: SelectOption)=>val['工质']=value" :disabled="(modeChoosed > 3)||(modeChoosed!==ind+1)"/>
+
                   </n-space>
                 </n-collapse-item>
                 <n-divider></n-divider>
@@ -117,7 +122,7 @@
   <n-space vertical>
     <n-card :bordered='false' class='rounded-16px shadow-sm'>
       <n-space justify='center'>
-        <p class='text-24px font-bold pb-12px'>T-S图</p>
+                <p class='text-24px font-bold pb-12px'>T-S图</p>
         <!-- <n-switch v-model:value="dayOrWeek" size="large" class='pt-15px' @update:value="updateSwich">
           <template #checked> 周数据图 </template>
           <template #unchecked> 日数据图 </template>
@@ -194,18 +199,18 @@ const modeOptions = [
 ];
 
 // 工质选择
-const wfOptions=[
-{
-	label:'Water',
-	value:'Water',
-},
-{
-	label:'R134a',
-	value:'R134a',
-},
-]
+// const wfOptions=[
+// {
+// 	label:'Water',
+// 	value:1,
+// },
+// {
+// 	label:'R134a',
+// 	value:2,
+// },
+// ]
 
-//检测到模式选择变化时，打印出来
+ //检测到模式选择变化时，打印出来
 //  watch(simulateOrOptimizeSwitch, (newValue, oldValue) => {
 //    console.log('modeChoosed changed from', oldValue, 'to', newValue)
 //  })
@@ -275,17 +280,17 @@ const lineOptions = ref<ECOption>({
     }
   },
   yAxis:
-  {
-    type: 'value',
-    name: '温度(T)',
-    axisPointer: {
+    {
+      type: 'value',
+      name: '温度(T)',
+			axisPointer: {
       snap: true
     },
-    // axisLine: { onZero: false },
-    axisLabel: {
-      formatter: '{value} K'
+			// axisLine: { onZero: false },
+      axisLabel: {
+        formatter: '{value} K'
+      },
     },
-  },
   series: [
     {
       name: '朗肯循环',
@@ -297,17 +302,17 @@ const lineOptions = ref<ECOption>({
         focus: 'series'
       },
 
-      //   data: [
-      //     // 维度X   维度Y   其他维度 ...
-      //     [  5.4,    4.5  ],
-      // 		[  3.4,    4.5, ],
-      //     [  7.2,    2.3, ],
-      //     [  10.8,   4,   ],
-      // 		[  9.8,   8.5,  ],
-      // 		[  9.8,   9.5,  ],
-      // 		[  8.8,   4.5,  ],
-      // 		[  5.4,    4.5  ]
-      // ]
+    //   data: [
+    //     // 维度X   维度Y   其他维度 ...
+    //     [  5.4,    4.5  ],
+		// 		[  3.4,    4.5, ],
+    //     [  7.2,    2.3, ],
+    //     [  10.8,   4,   ],
+		// 		[  9.8,   8.5,  ],
+		// 		[  9.8,   9.5,  ],
+		// 		[  8.8,   4.5,  ],
+		// 		[  5.4,    4.5  ]
+    // ]
     },
     {
       name: '再热循环',
@@ -319,20 +324,20 @@ const lineOptions = ref<ECOption>({
         focus: 'series'
       },
 
-      //     data: [
-      //     // 维度X   维度Y   其他维度 ...
-      //     [  3.4,    4.5  ],
-      // 		[  3.4,    4.5, ],
-      //     [  4.2,    2.3, ],
-      //     [  10.8,   4,   ],
-      // 		[  9.8,   9.5,  ],
-      // 		[  8.8,   9.5,  ],
-      // 		[  8.8,   7.5,  ],
-      // 		[  3.4,    4.5  ]
-      //  ]
+    //     data: [
+    //     // 维度X   维度Y   其他维度 ...
+    //     [  3.4,    4.5  ],
+		// 		[  3.4,    4.5, ],
+    //     [  4.2,    2.3, ],
+    //     [  10.8,   4,   ],
+		// 		[  9.8,   9.5,  ],
+		// 		[  8.8,   9.5,  ],
+		// 		[  8.8,   7.5,  ],
+		// 		[  3.4,    4.5  ]
+    //  ]
     },
-    {
-      name: '制冷循环',
+		{
+		name: '制冷循环',
       type: 'line',
       smooth: true,
       // stack: 'Total',
@@ -340,17 +345,17 @@ const lineOptions = ref<ECOption>({
       emphasis: {
         focus: 'series'
       },
-      //     data: [
-      //     // 维度X   维度Y   其他维度 ...
-      //     [  3.4,    4.5  ],
-      // 		[  3.4,    4.5, ],
-      //     [  4.2,    2.3, ],
-      //     [  10.8,   4,   ],
-      // 		[  9.8,   9.5,  ],
-      // 		[  8.8,   9.5,  ],
-      // 		[  8.8,   7.5,  ],
-      // 		[  3.4,    4.5  ]
-      //  ]
+    //     data: [
+    //     // 维度X   维度Y   其他维度 ...
+    //     [  3.4,    4.5  ],
+		// 		[  3.4,    4.5, ],
+    //     [  4.2,    2.3, ],
+    //     [  10.8,   4,   ],
+		// 		[  9.8,   9.5,  ],
+		// 		[  8.8,   9.5,  ],
+		// 		[  8.8,   7.5,  ],
+		// 		[  3.4,    4.5  ]
+    //  ]
     }
   ]
 }) as Ref<ECOption>;
@@ -378,22 +383,22 @@ type SimulationParams = {
     '冷凝器冷却压力(pa)': number;
     '水泵供给压力(pa)': number;
     '锅炉出口温度(k)': number;
-    '工质': string;
+		'工质':string;
   },
-  再热循环参数: {
-    '冷凝器冷却压力(pa)': number;
+	再热循环参数:{
+		'冷凝器冷却压力(pa)': number;
     '水泵供给压力(pa)': number;
     '锅炉出口温度(k)': number;
-    '再热器出口温度(k)': number;
-    '汽轮机一级出口压力(pa)': number;
-    '工质': string;
-  },
-  制冷循环参数: {
-    '压缩机出口压力(pa)': number;
-    '节气门出口压力(pa)': number;
-    '冷凝器出口R134a状态': string;
-    '蒸发器出口R134a状态': string;
-    '工质': string;
+		'再热器出口温度(k)': number;
+		'汽轮机一级出口压力(pa)':number;
+		'工质':string;
+	},
+  制冷循环参数:{
+    '压缩机出口压力(pa)':number;
+    '节气门出口压力(pa)':number;
+		'冷凝器出口R134a状态':string;
+		'蒸发器出口R134a状态':string;
+		'工质':string;
   }
 };
 
@@ -402,22 +407,22 @@ const simulationParamsInput = ref<SimulationParams>({
     '冷凝器冷却压力(pa)': 4000,
     '水泵供给压力(pa)': 3000000,
     '锅炉出口温度(k)': 823,
-    '工质': 'Water',
+		'工质':'Water',
   },
-  再热循环参数: {
-    '冷凝器冷却压力(pa)': 4000,
+	再热循环参数:{
+		'冷凝器冷却压力(pa)': 4000,
     '水泵供给压力(pa)': 18000000,
     '锅炉出口温度(k)': 823,
-    '再热器出口温度(k)': 720,
-    '汽轮机一级出口压力(pa)': 3000000,
-    '工质': 'Water',
-  },
-  制冷循环参数: {
-    '压缩机出口压力(pa)': 1020000,
-    '节气门出口压力(pa)': 84000,
-    '冷凝器出口R134a状态': "饱和液体",
-    '蒸发器出口R134a状态': "饱和蒸气",
-    '工质': 'Water',
+		'再热器出口温度(k)': 720,
+		'汽轮机一级出口压力(pa)':3000000,
+		'工质':'Water',
+	},
+  制冷循环参数:{
+    '压缩机出口压力(pa)':1020000,
+    '节气门出口压力(pa)':84000,
+		'冷凝器出口R134a状态':"饱和液体",
+		'蒸发器出口R134a状态':"饱和蒸气",
+		'工质':'Water',
   }
 });
 
@@ -455,7 +460,7 @@ const isOptimizationOptions = ref([
 
 const tableColumns = ref<Array<{ title: string; key: string }>>([]);
 const tableData = ref<TableData[]>([]); // 表格数据
-const figureData = ref<FigureData>({ xyAxis: [] }) // 图数据
+const figureData = ref<FigureData>({ xyAxis:[]}) // 图数据
 
 // 模式选择数据更新
 function updateModeSelectData(value: number, options: SelectOption) {
@@ -469,7 +474,7 @@ function updateModeSelectData(value: number, options: SelectOption) {
 // 工质选择数据更新
 // function updatewfSelectData(value: number, options: SelectOption) {
 //   if (value == 1) {
-//     simulationParamsInput
+
 //   }
 // 	else if(value == 2){
 
@@ -477,21 +482,22 @@ function updateModeSelectData(value: number, options: SelectOption) {
 //   tableData.value = [];
 // }
 
+
 // 更新表格数据
 const updateFigure = () => {
   // dayChoiceSlider.value = dayValue;
   // let dataRange = dayOrWeek.value ? 24 * 7 : 24;
-  lineOptions.value.yAxis = {
-    type: 'value',
-    name: '温度(T)',
-    axisPointer: {
+	lineOptions.value.yAxis={
+      type: 'value',
+      name: '温度(T)',
+			axisPointer: {
       snap: true
     },
-    axisLabel: {
-      formatter: '{value} K'
-    },
-  };
-  lineOptions.value.xAxis = {
+      axisLabel: {
+        formatter: '{value} K'
+      },
+    };
+	lineOptions.value.xAxis = {
     type: 'value',
     name: '熵(S)',
     axisLabel: {
@@ -499,8 +505,8 @@ const updateFigure = () => {
     }
   };
 
-  lineOptions.value.series = Object.keys(figureData.value.xyAxis).map((key) => {
-    return {
+	lineOptions.value.series = Object.keys(figureData.value.xyAxis).map((key) => {
+		return {
       name: key,
       type: 'line',
       smooth: true,
@@ -509,11 +515,11 @@ const updateFigure = () => {
       emphasis: {
         focus: 'series'
       },
-      data: figureData.value.xyAxis
-    }
-  })
-  lineOptions.value.legend = {
-    data: []
+			data:figureData.value.xyAxis
+		}
+    })
+	lineOptions.value.legend = {
+    	data: []
   }
 
 }
@@ -531,9 +537,9 @@ const message = useMessage();
 function simulateToServer() {
   isCalculating.value = true;
   request.post('/simulation', {
-    inputdata: simulationParamsInput.value,
-    mode: modeChoosed.value
-  })
+      inputdata: simulationParamsInput.value,
+      mode: modeChoosed.value
+    })
     .then(
       response => {
         isCalculating.value = false;
@@ -562,7 +568,7 @@ function simulateToServer() {
         });
         // console.log(tableColumns.value);
         figureData.value = backEndData.figure;
-        // console.log(figureData)
+				// console.log(figureData)
         updateFigure();
       },
       error => {
