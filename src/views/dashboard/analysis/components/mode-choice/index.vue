@@ -60,13 +60,13 @@
                   :disabled='((modeChoosed == 1) && (ind != 0)) || ((modeChoosed == 2) && (ind != 1)) || ((modeChoosed == 3) && (ind != 2))'>
                   <!-- ind代表第几个不显示，用于在模式切换时进行选择 -->
                   <n-space vertical justify='space-between' size='large' style='margin-bottom: 10px;'>
-                    <n-input v-for="(val_input, key_input, _) in (Object.fromEntries(Object.entries(val).filter(([key,_])=>key!=='工质')) as { [key: string]: number | string })"
+                    <n-input v-for="(val_input, key_input, _) in (Object.fromEntries(Object.entries(val).filter(([key,_])=>key!=='工质')) as { [key: string]: number })"
                       v-model:value='val[key_input as keyof typeof val]' :disabled="(modeChoosed > 3)||(modeChoosed!==ind+1)"
                       :placeholder='val_input.toString()' :parse="parse" :format="format">
                       <template #prefix>{{ key_input }}： </template>
                     </n-input>
                     <p>工质：</p>
-                    <n-select v-model:value="val['工质']" :options="wfOptions" @update:value="(value: String, options: SelectOption)=>val['工质']=value" :disabled="(modeChoosed > 3)||(modeChoosed!==ind+1)"/>
+                    <n-select v-model:value="val['工质']" :options="wfOptions" @update:value="(value: string, options: SelectOption)=>val['工质']=value" :disabled="(modeChoosed > 3)||(modeChoosed!==ind+1)"/>
                   </n-space>
                 </n-collapse-item>
                 <n-divider></n-divider>
@@ -391,8 +391,6 @@ type SimulationParams = {
   制冷循环参数: {
     '压缩机出口压力(pa)': number;
     '节气门出口压力(pa)': number;
-    '冷凝器出口R134a状态': string;
-    '蒸发器出口R134a状态': string;
     '工质': string;
   }
 };
@@ -415,8 +413,6 @@ const simulationParamsInput = ref<SimulationParams>({
   制冷循环参数: {
     '压缩机出口压力(pa)': 1020000,
     '节气门出口压力(pa)': 84000,
-    '冷凝器出口R134a状态': "饱和液体",
-    '蒸发器出口R134a状态': "饱和蒸气",
     '工质': 'Water',
   }
 });
