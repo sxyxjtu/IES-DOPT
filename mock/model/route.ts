@@ -36,11 +36,34 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
       // }
     ],
     meta: {
-      title: '工作台',
+      title: '仿真',
       icon: 'mdi:monitor-dashboard',
       order: 1
     }
-  }],
+  },
+	{
+		name: 'optimization',
+		path: '/optimization',
+		component: 'basic',
+		children: [
+			{
+        name: 'optimization_workbench',
+        path: '/optimization/workbench',
+        component: 'self',
+        meta: {
+          title: '第一个优化问题',
+          requiresAuth: true,
+          icon: 'icon-park-outline:analysis'
+        }
+      },
+
+		],
+		meta: {
+			title: '优化',
+			icon: 'icon-park-outline:workbench',
+			order: 2
+		}
+	}],
   admin: [],
   user: []
 };
